@@ -128,9 +128,26 @@ class event_form extends moodleform {
         if ($newevent) {
 
             $mform->addElement('checkbox', 'repeat', get_string('repeatevent', 'calendar'), null, 'repeat');
-            $mform->addElement('text', 'repeats', get_string('repeatweeksl', 'calendar'), 'maxlength="10" size="10"');
+            $mform->addElement('text', 'repeatfreq', get_string('repeatfrequency', 'calendar'), 'maxlength="5" size="5"');
+ 		$mform->disabledIf('repeatfreq','repeat','notchecked');
+			$mform->setType('repeatfreq', PARAM_INT);
+            $mform->setDefault('repeatfreq', 1);
+            	
+                        $options = array( 1 => get_string('minutes', 'calendar'),
+                                          2 => get_string('hours', 'calendar'),
+                                          3 => get_string('days', 'calendar'),
+                                          4 => get_string('weeks', 'calendar'),
+                                          5 => get_string('twoweeks', 'calendar'),
+                                          6 => get_string('months', 'calendar'),
+                                          7 => get_string('years', 'calendar')
+                                        );
+		$mform->addElement('select', 'repeattype', null, $options);
+                $mform->setDefault('repeattype', 4);
+                $mform->disabledIf('repeattype','repeat','notchecked');			
+			
+			$mform->addElement('text', 'repeats', get_string('totalevents', 'calendar'), 'maxlength="5" size="5"');
             $mform->setType('repeats', PARAM_INT);
-            $mform->setDefault('repeats', 1);
+            $mform->setDefault('repeats', 2);
             $mform->disabledIf('repeats','repeat','notchecked');
 
         } else if ($repeatedevents) {
