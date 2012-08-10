@@ -2134,9 +2134,43 @@ class calendar_event {
                 unset($eventcopy->id);
 
                 for($i = 1; $i < $eventcopy->repeats; $i++) {
-
-                    $eventcopy->timestart = ($eventcopy->timestart+WEEKSECS) + dst_offset_on($eventcopy->timestart) - dst_offset_on($eventcopy->timestart+WEEKSECS);
-
+    		// Methods used to calculate repeat events
+			// Repeat by number of minutes
+                   if (isset ($this->properties->repeattype) && $this->properties->repeattype=='1') {
+						$eventcopy->timestart = ($eventcopy->timestart+60*$this->properties->repeatfreq) + dst_offset_on($eventcopy->timestart) - dst_offset_on($eventcopy->timestart+DAYSECS*$this->properties->repeatfreq);
+					}
+			// Repeat by number of hours
+					if (isset ($this->properties->repeattype) && $this->properties->repeattype=='2') {
+						$eventcopy->timestart = ($eventcopy->timestart+HOURSECS*$this->properties->repeatfreq) + dst_offset_on($eventcopy->timestart) - dst_offset_on($eventcopy->timestart+HOURSECS*$this->properties->repeatfreq);
+					}
+			// Repeat by number of days
+					if (isset ($this->properties->repeattype) && $this->properties->repeattype=='3') {
+						$eventcopy->timestart = ($eventcopy->timestart+DAYSECS*$this->properties->repeatfreq) + dst_offset_on($eventcopy->timestart) - dst_offset_on($eventcopy->timestart+DAYSECS*$this->properties->repeatfreq);
+					}
+			// Repeat by number of weeks
+					if (isset ($this->properties->repeattype) && $this->properties->repeattype=='4') {
+						$eventcopy->timestart = ($eventcopy->timestart+WEEKSECS*$this->properties->repeatfreq) + dst_offset_on($eventcopy->timestart) - dst_offset_on($eventcopy->timestart+WEEKSECS*$this->properties->repeatfreq);
+					}
+			// Repeat by number of fortnights(2 weeks)
+                                        if (isset ($this->properties->repeattype) && $this->properties->repeattype=='5') {
+						$eventcopy->timestart = ($eventcopy->timestart+2*WEEKSECS*$this->properties->repeatfreq) + dst_offset_on($eventcopy->timestart) - dst_offset_on($eventcopy->timestart+2*WEEKSECS*$this->properties->repeatfreq);
+					}
+			// Repeat by number of months. Notifies if repeat dates in requested months do not exist.
+					if (isset ($this->properties->repeattype) && $this->properties->repeattype=='6') {
+						$daynumber1=idate( 'd',$eventcopy->timestart);
+						$eventcopy->timestart = ($eventcopy->timestart+(strtotime ("+".$this->properties->repeatfreq."months",$eventcopy->timestart))-$eventcopy->timestart)+ dst_offset_on($eventcopy->timestart) - dst_offset_on($eventcopy->timestart+(strtotime ("+".$this->properties->repeatfreq."months",$eventcopy->timestart))-$eventcopy->timestart);
+						$daynumber2=idate( 'd',$eventcopy->timestart);
+     				if   ($daynumber1 > $daynumber2) {
+                                    print_error('eventdateinvalid', 'calendar');
+	 				}}
+			// Repeat by number of years. Notifies if repeat date 29th Februrary does not exist.
+		 			if (isset ($this->properties->repeattype) && $this->properties->repeattype=='7') {
+						$daynumber1=idate( 'd',$eventcopy->timestart);
+						$eventcopy->timestart = ($eventcopy->timestart+(strtotime ("+".$this->properties->repeatfreq."years",$eventcopy->timestart))-$eventcopy->	timestart)+ dst_offset_on($eventcopy->timestart) - dst_offset_on($eventcopy->timestart+(strtotime ("+".$this->properties->repeatfreq."years",$eventcopy->timestart))-$eventcopy->timestart);					
+						$daynumber2=idate( 'd',$eventcopy->timestart);
+     				if   ($daynumber1 > $daynumber2) {
+                                    print_error('eventdateinvalid', 'calendar');
+                                    }}
                     // Get the event id for the log record.
                     $eventcopyid = $DB->insert_record('event', $eventcopy);
 
