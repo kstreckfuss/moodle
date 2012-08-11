@@ -145,10 +145,19 @@ class event_form extends moodleform {
                 $mform->setDefault('repeattype', 4);
                 $mform->disabledIf('repeattype','repeat','notchecked');			
 			
-			$mform->addElement('text', 'repeats', get_string('totalevents', 'calendar'), 'maxlength="5" size="5"');
-            $mform->setType('repeats', PARAM_INT);
-            $mform->setDefault('repeats', 2);
-            $mform->disabledIf('repeats','repeat','notchecked');
+		$mform->addElement('radio', 'repeatendtype', get_string('endrepeats', 'calendar'),get_string('thismanyevents', 'calendar'), 0);	
+		$mform->disabledIf('repeatendtype','repeat','notchecked');	
+
+		$mform->addElement('text', 'repeats', null, 'maxlength="5" size="5"');
+		$mform->setType('repeats', PARAM_INT);
+            	$mform->setDefault('repeats', 2);
+            	$mform->disabledIf('repeats','repeat','notchecked');
+            	$mform->disabledIf('repeats','repeatendtype','noteq', 0);
+            	
+            	$mform->addElement('radio', 'repeatendtype', null ,get_string('repeatuntil', 'calendar'), 1);
+		$mform->addElement('date_time_selector', 'repeat_end', null);
+		$mform->disabledIf('repeat_end','repeat','notchecked');
+		$mform->disabledIf('repeat_end','repeatendtype','noteq', 1);
 
         } else if ($repeatedevents) {
 
