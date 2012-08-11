@@ -114,12 +114,12 @@ class event_form extends moodleform {
 
         $mform->addElement('radio', 'duration', get_string('eventduration', 'calendar'), get_string('durationnone', 'calendar'), 0);
 
-        $mform->addElement('radio', 'duration', null, get_string('durationuntil', 'calendar'), 1);
+        $mform->addElement('radio', 'duration', '&nbsp;', get_string('durationuntil', 'calendar'), 1);
         $mform->addElement('date_time_selector', 'timedurationuntil', '&nbsp;');
         $mform->disabledIf('timedurationuntil','duration','noteq', 1);
 
-        $mform->addElement('radio', 'duration', null, get_string('durationminutes', 'calendar'), 2);
-        $mform->addElement('text', 'timedurationminutes', null);
+        $mform->addElement('radio', 'duration', '&nbsp;', get_string('durationminutes', 'calendar'), 2);
+        $mform->addElement('text', 'timedurationminutes', '&nbsp;');
         $mform->setType('timedurationminutes', PARAM_INT);
         $mform->disabledIf('timedurationminutes','duration','noteq', 2);
 
@@ -141,21 +141,21 @@ class event_form extends moodleform {
                                           6 => get_string('months', 'calendar'),
                                           7 => get_string('years', 'calendar')
                                         );
-		$mform->addElement('select', 'repeattype', null, $options);
+		$mform->addElement('select', 'repeattype', '&nbsp;', $options);
                 $mform->setDefault('repeattype', 4);
                 $mform->disabledIf('repeattype','repeat','notchecked');			
 			
 		$mform->addElement('radio', 'repeatendtype', get_string('endrepeats', 'calendar'),get_string('thismanyevents', 'calendar'), 0);	
 		$mform->disabledIf('repeatendtype','repeat','notchecked');	
 
-		$mform->addElement('text', 'repeats', null, 'maxlength="5" size="5"');
+		$mform->addElement('text', 'repeats', '&nbsp;', 'maxlength="5" size="5"');
 		$mform->setType('repeats', PARAM_INT);
             	$mform->setDefault('repeats', 2);
             	$mform->disabledIf('repeats','repeat','notchecked');
             	$mform->disabledIf('repeats','repeatendtype','noteq', 0);
             	
-            	$mform->addElement('radio', 'repeatendtype', null ,get_string('repeatuntil', 'calendar'), 1);
-		$mform->addElement('date_time_selector', 'repeat_end', null);
+            	$mform->addElement('radio', 'repeatendtype', '&nbsp;' ,get_string('repeatuntil', 'calendar'), 1);
+		$mform->addElement('date_time_selector', 'repeat_end', '&nbsp;');
 		$mform->disabledIf('repeat_end','repeat','notchecked');
 		$mform->disabledIf('repeat_end','repeatendtype','noteq', 1);
 
