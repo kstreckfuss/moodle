@@ -2133,11 +2133,15 @@ class calendar_event {
                 $eventcopy = clone($this->properties);
                 unset($eventcopy->id);
 
-                for($i = 1; $i < $eventcopy->repeats; $i++) {
+             for($i = 1; $i < $eventcopy->repeats or $eventcopy->timestart < $eventcopy->repeat_end; $i++){
+			
+			if (isset ($this->properties->repeatendtype) && $this->properties->repeatendtype=='1' && $eventcopy->repeat_end < $eventcopy->timestart) { 
+            print_error('invalidtimerepeatend', 'calendar'); 
+       	 } 	 
     		// Methods used to calculate repeat events
 			// Repeat by number of minutes
                    if (isset ($this->properties->repeattype) && $this->properties->repeattype=='1') {
-						$eventcopy->timestart = ($eventcopy->timestart+60*$this->properties->repeatfreq) + dst_offset_on($eventcopy->timestart) - dst_offset_on($eventcopy->timestart+DAYSECS*$this->properties->repeatfreq);
+						$eventcopy->timestart = ($eventcopy->timestart+60*$this->properties->repeatfreq) + dst_offset_on($eventcopy->timestart) - dst_offset_on($eventcopy->timestart+60*$this->properties->repeatfreq);
 					}
 			// Repeat by number of hours
 					if (isset ($this->properties->repeattype) && $this->properties->repeattype=='2') {
@@ -2171,6 +2175,11 @@ class calendar_event {
      				if   ($daynumber1 > $daynumber2) {
                                     print_error('eventdateinvalid', 'calendar');
                                     }}
+                                    
+   			// Stop repeating if past the repeat end date
+				if (isset ($this->properties->repeatendtype) && $this->properties->repeatendtype=='1' && $eventcopy->timestart > $eventcopy->repeat_end){
+					continue;}
+	
                     // Get the event id for the log record.
                     $eventcopyid = $DB->insert_record('event', $eventcopy);
 
